@@ -21,13 +21,12 @@ public abstract class MyGrfObject {
 	abstract boolean loadFromData(DataInputStream din) throws IOException;
 
 	protected void readColorAndLineWidth(DataInputStream din) throws IOException {
-		this.c = convertColor(din.readInt());
+		this.colorInt = din.readInt();
+		this.c = convertColor(colorInt);
 		this.linewidth = din.readInt();
 	}
 
 	protected Color convertColor(int color) {
-		this.colorInt = color;
-
 		int red = (color & 0xFF0000) >> 16;
 		int green = (color & 0xFF00) >> 8;
 		int blue = (color & 0xFF);
