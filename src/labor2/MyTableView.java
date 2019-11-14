@@ -1,15 +1,17 @@
 package labor2;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
-import javafx.beans.value.ObservableValue;
+import javax.swing.text.TableView.TableRow;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -17,7 +19,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
-public class MyTableView extends TableView {
+public class MyTableView extends TableView<MyTableRow> {
 
 	class ColorCell extends TableCell<MyTableRow, Integer> {
 		@Override
@@ -36,7 +38,7 @@ public class MyTableView extends TableView {
 				Color color = Color.rgb(r, g, b);
 				setBackground(
 						new Background(new BackgroundFill(Color.rgb(r2, g2, b2), CornerRadii.EMPTY, Insets.EMPTY)));
-				setText( r + ", " + g + ", " + b);
+				setText(r + ", " + g + ", " + b);
 				setTextFill(color);
 			} else {
 				setText("--");
@@ -86,14 +88,14 @@ public class MyTableView extends TableView {
 		TableColumn<MyTableRow, Integer> colColor = new TableColumn<>("Farbe");
 		colColor.setMinWidth(150);
 		colColor.setCellValueFactory(new PropertyValueFactory<MyTableRow, Integer>("Color"));
-		colColor.setCellFactory(new Callback<TableColumn<MyTableRow,Integer>, TableCell<MyTableRow, Integer>>() {
+		colColor.setCellFactory(new Callback<TableColumn<MyTableRow, Integer>, TableCell<MyTableRow, Integer>>() {
 			@Override
 			public TableCell<MyTableRow, Integer> call(TableColumn<MyTableRow, Integer> param) {
 				return new ColorCell();
 			}
 		});
 		colColor.setStyle("-fx-alignment: CENTER-RIGHT");
-		
+
 		TableColumn<MyTableRow, Integer> colLineWidth = new TableColumn<>("Strichstärke");
 		colLineWidth.setMinWidth(150);
 		colLineWidth.setCellValueFactory(new PropertyValueFactory<MyTableRow, Integer>("Strichstaerke"));
@@ -125,55 +127,64 @@ public class MyTableView extends TableView {
 			tableRow.setTyp(myGrfObject.getTyp());
 			tableRow.setColor(myGrfObject.getColorInt());
 			tableRow.setStrichstaerke(myGrfObject.getStrichstaerke());
-			System.out.println("Maximale Koordinate: " + myGrfObject.getMaxColumn());
 
 			for (int j = 0; j < maxColumn; j++) {
-				switch (j) {
-				case 0:
-					tableRow.setX1(myGrfObject.getX(j));
-					tableRow.setY1(myGrfObject.getY(j));
-					break;
-				case 1:
-					tableRow.setX2(myGrfObject.getX(j));
-					tableRow.setY2(myGrfObject.getY(j));
-					break;
-				case 2:
-					tableRow.setX3(myGrfObject.getX(j));
-					tableRow.setY3(myGrfObject.getY(j));
-					break;
-				case 3:
-					tableRow.setX4(myGrfObject.getX(j));
-					tableRow.setY4(myGrfObject.getY(j));
-					break;
-				case 4:
-					tableRow.setX5(myGrfObject.getX(j));
-					tableRow.setY5(myGrfObject.getY(j));
-					break;
-				case 5:
-					tableRow.setX6(myGrfObject.getX(j));
-					tableRow.setY6(myGrfObject.getY(j));
-					break;
-				case 6:
-					tableRow.setX7(myGrfObject.getX(j));
-					tableRow.setY7(myGrfObject.getY(j));
-					break;
-				case 7:
-					tableRow.setX8(myGrfObject.getX(j));
-					tableRow.setY8(myGrfObject.getY(j));
-					break;
-				case 8:
-					tableRow.setX9(myGrfObject.getX(j));
-					tableRow.setY9(myGrfObject.getY(j));
-					break;
-				case 9:
-					tableRow.setX10(myGrfObject.getX(j));
-					tableRow.setY10(myGrfObject.getY(j));
-					break;
-				case 10:
-					tableRow.setX11(myGrfObject.getX(j));
-					tableRow.setY11(myGrfObject.getY(j));
-					break;
+
+				String xValue = myGrfObject.getX(j);
+				String yValue = myGrfObject.getY(j);
+				try {
+					MyTableRow.class.getMethod("setX" + (j + 1), String.class).invoke(tableRow, xValue);
+					MyTableRow.class.getMethod("setY" + (j + 1), String.class).invoke(tableRow, yValue);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
+
+//				switch (j) {
+//				case 0:
+//					tableRow.setX1(xValue);
+//					tableRow.setY1(yValue);
+//					break;
+//				case 1:
+//					tableRow.setX2(xValue);
+//					tableRow.setY2(yValue);
+//					break;
+//				case 2:
+//					tableRow.setX3(xValue);
+//					tableRow.setY3(yValue);
+//					break;
+//				case 3:
+//					tableRow.setX4(xValue);
+//					tableRow.setY4(yValue);
+//					break;
+//				case 4:
+//					tableRow.setX5(xValue);
+//					tableRow.setY5(yValue);
+//					break;
+//				case 5:
+//					tableRow.setX6(xValue);
+//					tableRow.setY6(yValue);
+//					break;
+//				case 6:
+//					tableRow.setX7(xValue);
+//					tableRow.setY7(yValue);
+//					break;
+//				case 7:
+//					tableRow.setX8(xValue);
+//					tableRow.setY8(yValue);
+//					break;
+//				case 8:
+//					tableRow.setX9(xValue);
+//					tableRow.setY9(yValue);
+//					break;
+//				case 9:
+//					tableRow.setX10(xValue);
+//					tableRow.setY10(yValue);
+//					break;
+//				case 10:
+//					tableRow.setX11(xValue);
+//					tableRow.setY11(yValue);
+//					break;
+//				}
 			}
 
 			listeRows.add(tableRow);
