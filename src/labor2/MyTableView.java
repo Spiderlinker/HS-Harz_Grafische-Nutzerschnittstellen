@@ -1,10 +1,6 @@
 package labor2;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
-
-import javax.swing.text.TableView.TableRow;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,7 +13,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
-import javafx.util.Callback;
 
 public class MyTableView extends TableView<MyTableRow> {
 
@@ -76,24 +71,19 @@ public class MyTableView extends TableView<MyTableRow> {
 
 	private void createColumns() {
 		TableColumn<MyTableRow, String> colNr = new TableColumn<>("Nr");
-		colNr.setMinWidth(20);
+		colNr.setMinWidth(30);
 		colNr.setCellValueFactory(new PropertyValueFactory<MyTableRow, String>("Nr"));
 		colNr.setStyle("-fx-alignment: CENTER-RIGHT");
 
 		TableColumn<MyTableRow, String> colTyp = new TableColumn<>("Typ");
-		colTyp.setMinWidth(100);
+		colTyp.setMinWidth(110);
 		colTyp.setCellValueFactory(new PropertyValueFactory<MyTableRow, String>("Typ"));
 		colTyp.setStyle("-fx-alignment: CENTER-RIGHT");
 
 		TableColumn<MyTableRow, Integer> colColor = new TableColumn<>("Farbe");
-		colColor.setMinWidth(150);
+		colColor.setMinWidth(140);
 		colColor.setCellValueFactory(new PropertyValueFactory<MyTableRow, Integer>("Color"));
-		colColor.setCellFactory(new Callback<TableColumn<MyTableRow, Integer>, TableCell<MyTableRow, Integer>>() {
-			@Override
-			public TableCell<MyTableRow, Integer> call(TableColumn<MyTableRow, Integer> param) {
-				return new ColorCell();
-			}
-		});
+		colColor.setCellFactory((TableColumn<MyTableRow, Integer> param) -> new ColorCell());
 		colColor.setStyle("-fx-alignment: CENTER-RIGHT");
 
 		TableColumn<MyTableRow, Integer> colLineWidth = new TableColumn<>("Strichstärke");
@@ -104,15 +94,17 @@ public class MyTableView extends TableView<MyTableRow> {
 		this.getColumns().addAll(colNr, colTyp, colColor, colLineWidth);
 
 		int maxColumn = getMaxKoordinaten();
-		for (int i = 0; i < maxColumn; i++) {
-			TableColumn<MyTableRow, String> colX = new TableColumn<MyTableRow, String>("x" + (i + 1));
-			TableColumn<MyTableRow, String> colY = new TableColumn<MyTableRow, String>("y" + (i + 1));
-			colX.setCellValueFactory(new PropertyValueFactory<MyTableRow, String>("x" + (i + 1)));
-			colY.setCellValueFactory(new PropertyValueFactory<MyTableRow, String>("y" + (i + 1)));
+		for (int i = 1; i <= maxColumn; i++) {
+			TableColumn<MyTableRow, String> colX = new TableColumn<MyTableRow, String>("x" + i);
+			colX.setCellValueFactory(new PropertyValueFactory<MyTableRow, String>("x" + i));
 			colX.setStyle("-fx-alignment: CENTER");
-			colY.setStyle("-fx-alignment: CENTER");
 			colX.setMinWidth(50);
+
+			TableColumn<MyTableRow, String> colY = new TableColumn<MyTableRow, String>("y" + i);
+			colY.setCellValueFactory(new PropertyValueFactory<MyTableRow, String>("y" + i));
+			colY.setStyle("-fx-alignment: CENTER");
 			colY.setMinWidth(50);
+
 			getColumns().addAll(colX, colY);
 		}
 	}
